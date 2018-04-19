@@ -22,6 +22,9 @@
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\..\..\..\Program Files\Unity2017-3-1f1\Editor\Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="Vuforia.UnityExtensions">
+      <HintPath>..\..\..\..\..\..\..\..\Program Files\Unity2017-2-1p1\Editor\Data\PlaybackEngines\VuforiaSupport\Managed\Runtime\Vuforia.UnityExtensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
