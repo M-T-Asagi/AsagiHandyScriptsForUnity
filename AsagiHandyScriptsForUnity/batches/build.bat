@@ -12,4 +12,5 @@ call "%UNITY_PATH%\Editor\Data\Mono\bin\smcs.bat" ^
     "..\*.cs"
 
 md "%UNITY_PATH%\Editor\Data\UnityExtensions\Unity\%OUTPUT%"
-copy "../output/%OUTPUT%.dll" /B "%UNITY_PATH%\Editor\Data\UnityExtensions\Unity\%OUTPUT%\" /B
+
+copy "..\output\%OUTPUT%.dll" /B "%UNITY_PATH%\Editor\Data\UnityExtensions\Unity\%OUTPUT%\" /B
