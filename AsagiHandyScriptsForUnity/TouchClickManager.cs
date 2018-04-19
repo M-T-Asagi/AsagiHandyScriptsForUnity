@@ -188,6 +188,7 @@ namespace AsagiHandyScripts
             if (!Cancelled && anyTap)
             {
                 float timeNow = Time.time;
+                Vector2 lastTouchPos = tapNowPos;
                 tapNowPos = GetPointerPosition(mouseClick);
 
                 float distanceTapPos = Vector2.Distance(tapNowPos, tapStartPos);
@@ -219,6 +220,20 @@ namespace AsagiHandyScripts
 
                     Debug.Log("SwipeStart : TouchClickManager : " + timeNow);
                 }
+                else if (Swiped)
+                {
+                    if (Swipe != null)
+                        Swipe(this, new SwipeEventArgs(timeNow, tapNowPos - lastTouchPos));
+
+                    Debug.Log("Swiping : TouchClickManager : " + timeNow);
+                }
+                else if (Held)
+                {
+                    if (TapHold != null)
+                        TapHold(this, new TapHoldEventArgs(timeNow, timeNow - tapStartTime, tapNowPos));
+
+                    Debug.Log("Holding : TouchClickManager : " + timeNow);
+                }
                 else if (Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
                 {
                     Tapped = false;
@@ -243,9 +258,6 @@ namespace AsagiHandyScripts
 
                 if (Swiped)
                 {
-                    if (Swipe != null)
-                        Swipe(this, new SwipeEventArgs(timeNow, tapNowPos - tapStartPos));
-
                     if (SwipeEnd != null)
                         SwipeEnd(this, new SwipeEndEventArgs(timeNow, tapNowPos));
 
@@ -253,9 +265,6 @@ namespace AsagiHandyScripts
                 }
                 else if (Held)
                 {
-                    if (TapHold != null)
-                        TapHold(this, new TapHoldEventArgs(timeNow, timeNow - tapStartTime, tapNowPos));
-
                     if (TapHoldOut != null)
                         TapHoldOut(this, new TapHoldOutEventArgs(timeNow, tapNowPos));
 
