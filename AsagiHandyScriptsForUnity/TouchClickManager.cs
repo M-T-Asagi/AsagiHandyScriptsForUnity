@@ -147,17 +147,24 @@ public class TouchClickManager : MonoBehaviour
 
     public event EventHandler<SwipeEndEventArgs> SwipeEnd;
 
+    #region const variables
+    const float tapToSwipeMoves = 0.1f;
+    const float timeHoldDetection = 1.0f;
+    #endregion
+
+    #region public Variables
     public bool Tapped { get; private set; }
     public bool Swiped { get; private set; }
     public bool Held { get; private set; }
     public bool Cancelled { get; private set; }
+    #endregion
 
-    const float tapToSwipeMoves = 0.1f;
-
+    #region private variables
     float tapStartTime = 0;
     Vector2 tapStartPos = Vector2.zero;
     Vector2 tapNowPos = Vector2.zero;
     float lastTime;
+    #endregion
 
     // Use this for initialization
     void Start()
@@ -174,8 +181,9 @@ public class TouchClickManager : MonoBehaviour
     {
         bool mouseClick = Input.GetMouseButton(0);
         bool isTouch = Input.touchCount > 0;
+        bool anyTap = (mouseClick || isTouch);
 
-        if (!Cancelled && mouseClick || isTouch)
+        if (!Cancelled && anyTap)
         {
             float timeNow = Time.time;
             tapNowPos = GetPointerPosition(mouseClick);
@@ -188,20 +196,17 @@ public class TouchClickManager : MonoBehaviour
                 tapStartTime = Time.time;
                 Tapped = true;
 
-                if (TouchIn != null)
-                    TouchIn(this, new TouchInEventArgs(timeNow, tapNowPos));
+                TouchIn?.Invoke(this, new TouchInEventArgs(timeNow, tapNowPos));
             }
-            else if (!Held && distanceTapPos < tapToSwipeMoves)
+            else if (!Held && distanceTapPos < tapToSwipeMoves && timeNow - tapStartTime >= timeHoldDetection)
             {
                 Held = true;
-                if (TapHoldIn != null)
-                    TapHoldIn(this, new TapHoldInEventArgs(timeNow, tapNowPos));
+                TapHoldIn?.Invoke(this, new TapHoldInEventArgs(timeNow, tapNowPos));
             }
             else if (!Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
             {
                 Swiped = true;
-                if (SwipeStart != null)
-                    SwipeStart(this, new SwipeStartEventArgs(timeNow, tapStartPos));
+                SwipeStart?.Invoke(this, new SwipeStartEventArgs(timeNow, tapStartPos));
             }
             else if (Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
             {
@@ -210,34 +215,36 @@ public class TouchClickManager : MonoBehaviour
                 Held = false;
                 Cancelled = true;
 
-                if (TapHoldCancel != null)
-                    TapHoldCancel(this, new TapHoldCancelEventArgs(timeNow, tapNowPos));
+                TapHoldCancel?.Invoke(this, new TapHoldCancelEventArgs(timeNow, tapNowPos));
             }
-            else if ()
-
         }
-        else if (Cancelled && !mouseClick && !isTouch)
+        else if (!anyTap && (Tapped || Swiped || Held) && !Cancelled)
         {
+            float timeNow = Time.time;
 
+            ResetFlag();
+
+            TouchOut?.Invoke(this, new TouchOutEventArgs(timeNow, tapNowPos));
+
+            if (Swiped)
+            {
+
+                Swipe?.Invoke(this, new SwipeEventArgs(timeNow, tapNowPos - tapStartPos));
+                SwipeEnd?.Invoke(this, new SwipeEndEventArgs(timeNow, tapNowPos));
+            }
+            else if (Held)
+            {
+                TapHold?.Invoke(this, new TapHoldEventArgs(timeNow, timeNow - tapStartTime, tapNowPos));
+                TapHoldOut?.Invoke(this, new TapHoldOutEventArgs(timeNow, tapNowPos));
+            }
+            else if (Tapped)
+            {
+                Tap?.Invoke(this, new TapEventArgs(timeNow, tapNowPos));
+            }
         }
-        else if (tapping)
+        else if (Cancelled && !anyTap)
         {
-            float force = (tapStartPos.x - tapNowPos.x) / Screen.width * rotationPower / (Time.time - tapStartTime);
-            float absolutedForce = Mathf.Abs(force);
-            float absolutedTorqueY = Mathf.Abs(rigidbody.angularVelocity.normalized.y);
-
-            if (absolutedForce < 0.01f)
-            {
-                force = 0;
-                rigidbody.angularVelocity = Vector3.zero;
-            }
-            else if (absolutedForce > absolutedTorqueY || absolutedForce > absolutedTorqueY)
-            {
-                rigidbody.angularVelocity = Vector3.zero;
-            }
-
-            rigidbody.AddTorque(new Vector3(0, force, 0), ForceMode.Impulse);
-            tapping = false;
+            Cancelled = false;
         }
     }
 
@@ -247,5 +254,13 @@ public class TouchClickManager : MonoBehaviour
             return Input.mousePosition;
         else
             return Input.GetTouch(0).position;
+    }
+
+    void ResetFlag()
+    {
+        Tapped = false;
+        Swiped = false;
+        Held = false;
+        Cancelled = false;
     }
 }
