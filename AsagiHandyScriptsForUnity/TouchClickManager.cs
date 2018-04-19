@@ -196,17 +196,20 @@ public class TouchClickManager : MonoBehaviour
                 tapStartTime = Time.time;
                 Tapped = true;
 
-                TouchIn?.Invoke(this, new TouchInEventArgs(timeNow, tapNowPos));
+                if (TouchIn != null)
+                    TouchIn(this, new TouchInEventArgs(timeNow, tapNowPos));
             }
             else if (!Held && distanceTapPos < tapToSwipeMoves && timeNow - tapStartTime >= timeHoldDetection)
             {
                 Held = true;
-                TapHoldIn?.Invoke(this, new TapHoldInEventArgs(timeNow, tapNowPos));
+                if (TapHoldIn != null)
+                    TapHoldIn(this, new TapHoldInEventArgs(timeNow, tapNowPos));
             }
             else if (!Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
             {
                 Swiped = true;
-                SwipeStart?.Invoke(this, new SwipeStartEventArgs(timeNow, tapStartPos));
+                if (SwipeStart != null)
+                    SwipeStart(this, new SwipeStartEventArgs(timeNow, tapStartPos));
             }
             else if (Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
             {
@@ -215,7 +218,8 @@ public class TouchClickManager : MonoBehaviour
                 Held = false;
                 Cancelled = true;
 
-                TapHoldCancel?.Invoke(this, new TapHoldCancelEventArgs(timeNow, tapNowPos));
+                if (TapHoldCancel != null)
+                    TapHoldCancel(this, new TapHoldCancelEventArgs(timeNow, tapNowPos));
             }
         }
         else if (!anyTap && (Tapped || Swiped || Held) && !Cancelled)
@@ -224,22 +228,29 @@ public class TouchClickManager : MonoBehaviour
 
             ResetFlag();
 
-            TouchOut?.Invoke(this, new TouchOutEventArgs(timeNow, tapNowPos));
+            if (TouchOut != null)
+                TouchOut(this, new TouchOutEventArgs(timeNow, tapNowPos));
 
             if (Swiped)
             {
+                if (Swipe != null)
+                    Swipe(this, new SwipeEventArgs(timeNow, tapNowPos - tapStartPos));
 
-                Swipe?.Invoke(this, new SwipeEventArgs(timeNow, tapNowPos - tapStartPos));
-                SwipeEnd?.Invoke(this, new SwipeEndEventArgs(timeNow, tapNowPos));
+                if (SwipeEnd != null)
+                    SwipeEnd(this, new SwipeEndEventArgs(timeNow, tapNowPos));
             }
             else if (Held)
             {
-                TapHold?.Invoke(this, new TapHoldEventArgs(timeNow, timeNow - tapStartTime, tapNowPos));
-                TapHoldOut?.Invoke(this, new TapHoldOutEventArgs(timeNow, tapNowPos));
+                if (TapHold != null)
+                    TapHold(this, new TapHoldEventArgs(timeNow, timeNow - tapStartTime, tapNowPos));
+
+                if (TapHoldOut != null)
+                    TapHoldOut(this, new TapHoldOutEventArgs(timeNow, tapNowPos));
             }
             else if (Tapped)
             {
-                Tap?.Invoke(this, new TapEventArgs(timeNow, tapNowPos));
+                if (Tap != null)
+                    Tap(this, new TapEventArgs(timeNow, tapNowPos));
             }
         }
         else if (Cancelled && !anyTap)
