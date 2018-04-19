@@ -3,40 +3,43 @@ using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
 
-public class TrackStateManager : MonoBehaviour, ITrackableEventHandler
+namespace AsagiHandyScripts
 {
-    public bool Tracked { get; private set; }
-
-    protected TrackableBehaviour mTrackableBehaviour;
-
-    // Use this for initialization
-    void Start()
+    public class TrackStateManager : MonoBehaviour, ITrackableEventHandler
     {
-        Tracked = false;
+        public bool Tracked { get; private set; }
 
-        mTrackableBehaviour = transform.parent.gameObject.GetComponent<TrackableBehaviour>();
-        if (mTrackableBehaviour)
-            mTrackableBehaviour.RegisterTrackableEventHandler(this);
-    }
+        protected TrackableBehaviour mTrackableBehaviour;
 
-    public void OnTrackableStateChanged(
-       TrackableBehaviour.Status previousStatus,
-       TrackableBehaviour.Status newStatus)
-    {
-        if (newStatus == TrackableBehaviour.Status.DETECTED ||
-            newStatus == TrackableBehaviour.Status.TRACKED ||
-            newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
-        {
-            Tracked = true;
-        }
-        else if (previousStatus == TrackableBehaviour.Status.TRACKED &&
-                 newStatus == TrackableBehaviour.Status.NOT_FOUND)
+        // Use this for initialization
+        void Start()
         {
             Tracked = false;
+
+            mTrackableBehaviour = transform.parent.gameObject.GetComponent<TrackableBehaviour>();
+            if (mTrackableBehaviour)
+                mTrackableBehaviour.RegisterTrackableEventHandler(this);
         }
-        else
+
+        public void OnTrackableStateChanged(
+           TrackableBehaviour.Status previousStatus,
+           TrackableBehaviour.Status newStatus)
         {
-            Tracked = false;
+            if (newStatus == TrackableBehaviour.Status.DETECTED ||
+                newStatus == TrackableBehaviour.Status.TRACKED ||
+                newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
+            {
+                Tracked = true;
+            }
+            else if (previousStatus == TrackableBehaviour.Status.TRACKED &&
+                     newStatus == TrackableBehaviour.Status.NOT_FOUND)
+            {
+                Tracked = false;
+            }
+            else
+            {
+                Tracked = false;
+            }
         }
     }
 }
