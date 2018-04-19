@@ -36,9 +36,6 @@ public class TrackStateManager : MonoBehaviour, ITrackableEventHandler
         }
         else
         {
-            // For combo of previousStatus=UNKNOWN + newStatus=UNKNOWN|NOT_FOUND
-            // Vuforia is starting, but tracking has not been lost or found yet
-            // Call OnTrackingLost() to hide the augmentations
             Tracked = false;
         }
     }
