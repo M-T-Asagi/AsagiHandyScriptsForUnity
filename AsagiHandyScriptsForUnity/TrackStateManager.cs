@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using Vuforia;
 
@@ -7,6 +8,9 @@ namespace AsagiHandyScripts
 {
     public class TrackStateManager : MonoBehaviour, ITrackableEventHandler
     {
+        public event EventHandler<EventArgs> TrackedEvent;
+        public event EventHandler<EventArgs> UnTrackedEvent;
+
         public bool Tracked { get; private set; }
 
         protected TrackableBehaviour mTrackableBehaviour;
@@ -30,15 +34,16 @@ namespace AsagiHandyScripts
                 newStatus == TrackableBehaviour.Status.EXTENDED_TRACKED)
             {
                 Tracked = true;
-            }
-            else if (previousStatus == TrackableBehaviour.Status.TRACKED &&
-                     newStatus == TrackableBehaviour.Status.NOT_FOUND)
-            {
-                Tracked = false;
+
+                if (TrackedEvent != null)
+                    TrackedEvent(this, new EventArgs());
             }
             else
             {
                 Tracked = false;
+
+                if (UnTrackedEvent != null)
+                    UnTrackedEvent(this, new EventArgs());
             }
         }
     }
