@@ -157,8 +157,10 @@ namespace AsagiHandyScripts
         #endregion
 
         #region serialized fields
-        public float tapToSwipeMoves = 0.1f;
-        public float timeHoldDetection = 1.0f;
+        [SerializeField]
+        float tapToSwipeMoves = 0.1f;
+        [SerializeField]
+        float timeHoldDetection = 1.0f;
         #endregion
 
         #region private variables
@@ -286,7 +288,7 @@ namespace AsagiHandyScripts
             }
         }
 
-        Vector2 GetPointerPosition(bool isMouse)
+        public Vector2 GetPointerPosition(bool isMouse)
         {
             if (isMouse)
                 return Input.mousePosition;
