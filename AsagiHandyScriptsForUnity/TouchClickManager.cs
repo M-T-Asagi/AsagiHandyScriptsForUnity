@@ -161,6 +161,8 @@ namespace AsagiHandyScripts
         float tapToSwipeMoves = 0.1f;
         [SerializeField]
         float timeHoldDetection = 1.0f;
+        [SerializeField]
+        bool debug;
         #endregion
 
         #region private variables
@@ -204,7 +206,7 @@ namespace AsagiHandyScripts
                     if (TouchIn != null)
                         TouchIn(this, new TouchInEventArgs(timeNow, tapNowPos));
 
-                    Debug.Log("TouchIn : TouchClickManager : " + timeNow);
+                    DebugLog("TouchIn : TouchClickManager : " + timeNow);
                 }
                 else if (!Held && distanceTapPos < tapToSwipeMoves && timeNow - tapStartTime >= timeHoldDetection)
                 {
@@ -212,7 +214,7 @@ namespace AsagiHandyScripts
                     if (TapHoldIn != null)
                         TapHoldIn(this, new TapHoldInEventArgs(timeNow, tapNowPos));
 
-                    Debug.Log("TapHoldIn : TouchClickManager : " + timeNow);
+                    DebugLog("TapHoldIn : TouchClickManager : " + timeNow);
                 }
                 else if (!Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
                 {
@@ -220,21 +222,21 @@ namespace AsagiHandyScripts
                     if (SwipeStart != null)
                         SwipeStart(this, new SwipeStartEventArgs(timeNow, tapStartPos));
 
-                    Debug.Log("SwipeStart : TouchClickManager : " + timeNow);
+                    DebugLog("SwipeStart : TouchClickManager : " + timeNow);
                 }
                 else if (Swiped)
                 {
                     if (Swipe != null)
                         Swipe(this, new SwipeEventArgs(timeNow, tapNowPos - lastTouchPos));
 
-                    Debug.Log("Swiping : TouchClickManager : " + timeNow);
+                    DebugLog("Swiping : TouchClickManager : " + timeNow);
                 }
                 else if (Held)
                 {
                     if (TapHold != null)
                         TapHold(this, new TapHoldEventArgs(timeNow, timeNow - tapStartTime, tapNowPos));
 
-                    Debug.Log("Holding : TouchClickManager : " + timeNow);
+                    DebugLog("Holding : TouchClickManager : " + timeNow);
                 }
                 else if (Held && !Swiped && distanceTapPos >= tapToSwipeMoves)
                 {
@@ -246,7 +248,7 @@ namespace AsagiHandyScripts
                     if (TapHoldCancel != null)
                         TapHoldCancel(this, new TapHoldCancelEventArgs(timeNow, tapNowPos));
 
-                    Debug.Log("TapHoldCancelled : TouchClickManager : " + timeNow);
+                    DebugLog("TapHoldCancelled : TouchClickManager : " + timeNow);
                 }
             }
             else if (!anyTap && (Tapped || Swiped || Held) && !Cancelled)
@@ -256,28 +258,28 @@ namespace AsagiHandyScripts
                 if (TouchOut != null)
                     TouchOut(this, new TouchOutEventArgs(timeNow, tapNowPos));
 
-                Debug.Log("TouchOut : TouchClickManager : " + timeNow);
+                DebugLog("TouchOut : TouchClickManager : " + timeNow);
 
                 if (Swiped)
                 {
                     if (SwipeEnd != null)
                         SwipeEnd(this, new SwipeEndEventArgs(timeNow, tapNowPos));
 
-                    Debug.Log("SwipeIsEnd : TouchClickManager : " + timeNow);
+                    DebugLog("SwipeIsEnd : TouchClickManager : " + timeNow);
                 }
                 else if (Held)
                 {
                     if (TapHoldOut != null)
                         TapHoldOut(this, new TapHoldOutEventArgs(timeNow, tapNowPos));
 
-                    Debug.Log("TapHeld : TouchClickManager : " + timeNow);
+                    DebugLog("TapHeld : TouchClickManager : " + timeNow);
                 }
                 else if (Tapped)
                 {
                     if (Tap != null)
                         Tap(this, new TapEventArgs(timeNow, tapNowPos));
 
-                    Debug.Log("Tapped : TouchClickManager : " + timeNow);
+                    DebugLog("Tapped : TouchClickManager : " + timeNow);
                 }
 
                 ResetFlag();
@@ -302,6 +304,12 @@ namespace AsagiHandyScripts
             Swiped = false;
             Held = false;
             Cancelled = false;
+        }
+
+        void DebugLog(string str)
+        {
+            if (debug)
+                Debug.Log(str);
         }
     }
 }
