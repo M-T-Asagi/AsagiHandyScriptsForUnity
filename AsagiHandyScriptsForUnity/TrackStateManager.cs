@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System;
+﻿using System;
 using UnityEngine;
 using Vuforia;
 
@@ -8,6 +6,9 @@ namespace AsagiHandyScripts
 {
     public class TrackStateManager : MonoBehaviour, ITrackableEventHandler
     {
+        [SerializeField]
+        GameObject imageTarget;
+
         public event EventHandler<EventArgs> TrackedEvent;
         public event EventHandler<EventArgs> UnTrackedEvent;
 
@@ -20,7 +21,7 @@ namespace AsagiHandyScripts
         {
             Tracked = false;
 
-            mTrackableBehaviour = transform.parent.gameObject.GetComponent<TrackableBehaviour>();
+            mTrackableBehaviour = imageTarget.GetComponent<TrackableBehaviour>();
             if (mTrackableBehaviour)
                 mTrackableBehaviour.RegisterTrackableEventHandler(this);
         }
