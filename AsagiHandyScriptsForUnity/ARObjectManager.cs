@@ -123,13 +123,10 @@ namespace AsagiHandyScripts
             if (trackStateManager.Tracked)
             {
                 Ray ray = Camera.main.ScreenPointToRay(args.position);
-                RaycastHit hitInfo = new RaycastHit();
-                if (Physics.Raycast(ray, out hitInfo, 100, touchRayTargetLayers))
-                {
-                    _GroundPlaneHit(hitInfo.point, false);
-                }
+                RaycastHit? hitInfo = Functions.RaycastTouchPosition(args.position, touchRayTargetLayers);
+                if (hitInfo.HasValue)
+                    _GroundPlaneHit(hitInfo.Value.point, false);
             }
         }
     }
-
 }
