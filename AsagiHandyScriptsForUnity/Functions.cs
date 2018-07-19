@@ -1,6 +1,6 @@
 ﻿using Vuforia;
 
-namespace AsagiHandyScriptsForUnity
+namespace AsagiHandyScripts
 {
     public static class Functions
     {

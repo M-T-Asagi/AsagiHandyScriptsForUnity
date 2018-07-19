@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
-using AsagiHandyScripts;
 
-namespace AsagiHandyScriptsForUnity
+namespace AsagiHandyScripts
 {
     public class ARObjectManager : MonoBehaviour
     {
@@ -52,7 +51,8 @@ namespace AsagiHandyScriptsForUnity
         // Use this for initialization
         void Start()
         {
-            useGroundPlane = Functions.IsGroundPlaneSupported();
+            useGroundPlane = (Functions.IsGroundPlaneSupported() && planeFinder != null && groundAnchor != null);
+
             if (!useGroundPlane || markerBased)
                 markerSettings();
             else
@@ -74,7 +74,9 @@ namespace AsagiHandyScriptsForUnity
         {
             if (!markerBased)
             {
-                imageAnhor.SetActive(false);
+                if (imageAnhor != null)
+                    imageAnhor.SetActive(false);
+
                 anchor = groundAnchor.transform;
             }
             else
@@ -87,8 +89,11 @@ namespace AsagiHandyScriptsForUnity
 
         void markerSettings()
         {
-            planeFinder.SetActive(false);
-            groundAnchor.SetActive(false);
+            if (planeFinder != null)
+                planeFinder.SetActive(false);
+            if (groundAnchor != null)
+                groundAnchor.SetActive(false);
+
             touchClickManager.Tap += this.OnTap;
             anchor = imageAnhor.transform;
         }
