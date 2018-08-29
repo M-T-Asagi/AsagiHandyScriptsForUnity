@@ -2,4 +2,6 @@
 # don't use space both in comma before and after.
 
 UNITY_PATH,C:\Program Files\Unity2018-2-0f2
+BUID_TARGET,Handy\*.cs
 OUTPUT,AsagiHandyScripts
+EXTENDS_DLL,

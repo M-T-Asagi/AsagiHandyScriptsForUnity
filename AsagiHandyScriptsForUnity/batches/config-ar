@@ -1,0 +1,7 @@
+# ValiableName,Valiable
+# don't use space both in comma before and after.
+
+UNITY_PATH,C:\Program Files\Unity2018-2-0f2
+BUID_TARGET,Vuforia\*.cs
+OUTPUT,AsagiVuforiaScripts
+EXTENDS_DLL,-r:"..\output\AsagiHandyScripts.dll" ^

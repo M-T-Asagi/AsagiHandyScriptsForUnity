@@ -7,9 +7,10 @@ call "%UNITY_PATH%\Editor\Data\Mono\bin\smcs.bat" ^
     -r:"%UNITY_PATH%\Editor\Data\Managed\UnityEngine.dll" ^
     -r:"%UNITY_PATH%\Editor\Data\Managed\UnityEditor.dll" ^
 	-r:"%UNITY_PATH%\Editor\Data\PlaybackEngines\VuforiaSupport\Managed\Runtime\Vuforia.UnityExtensions.dll" ^
+	%EXTENDS_DLL% ^
     -target:library ^
     -out:"../output/%OUTPUT%.dll" ^
-    "..\*.cs"
+    "..\scripts\%BUID_TARGET%"
 
 md "%UNITY_PATH%\Editor\Data\UnityExtensions\Unity\%OUTPUT%"
 
