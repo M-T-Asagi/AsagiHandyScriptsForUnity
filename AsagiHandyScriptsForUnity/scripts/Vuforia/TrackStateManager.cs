@@ -2,7 +2,7 @@
 using UnityEngine;
 using Vuforia;
 
-namespace AsagiHandyScripts
+namespace AsagiVuforiaScripts
 {
     public class TrackStateManager : MonoBehaviour, ITrackableEventHandler
     {
@@ -13,6 +13,7 @@ namespace AsagiHandyScripts
         public event EventHandler<EventArgs> UnTrackedEvent;
 
         public bool Tracked { get; private set; }
+        public GameObject ImageTarget { get { return imageTarget; } private set { imageTarget = value; } }
 
         protected TrackableBehaviour mTrackableBehaviour;
 

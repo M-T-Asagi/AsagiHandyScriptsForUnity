@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Vuforia;
+using AsagiHandyScripts;
 
-namespace AsagiHandyScripts
+namespace AsagiVuforiaScripts
 {
     public class ARObjectManager : MonoBehaviour
     {
@@ -108,8 +109,8 @@ namespace AsagiHandyScripts
         {
             GameObject arranged = Instantiate(_gameObject, anchor, false);
             arObjects.Add(arranged);
-            arObjects[arObjects.Count - 1].transform.position = position;
-            arObjects[arObjects.Count - 1].transform.rotation = rotation;
+            arranged.transform.position = position;
+            arranged.transform.rotation = rotation;
             return arranged;
         }
 
@@ -123,7 +124,7 @@ namespace AsagiHandyScripts
             if (trackStateManager.Tracked)
             {
                 Ray ray = Camera.main.ScreenPointToRay(args.position);
-                RaycastHit? hitInfo = Functions.RaycastTouchPosition(args.position, touchRayTargetLayers);
+                RaycastHit? hitInfo = AsagiHandyScripts.Functions.RaycastTouchPosition(args.position, touchRayTargetLayers);
                 if (hitInfo.HasValue)
                     _GroundPlaneHit(hitInfo.Value.point, false);
             }
