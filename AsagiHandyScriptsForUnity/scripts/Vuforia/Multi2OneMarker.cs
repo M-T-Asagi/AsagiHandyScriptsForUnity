@@ -40,7 +40,7 @@ namespace AsagiVuforiaScripts
         public Quaternion rotation { get; private set; }
 
         public bool markerDetected { get; private set; }
-
+        public int detectedMarkerNum { get { return points.Count; } }
 
         public bool DontUpdate
         {
@@ -71,24 +71,34 @@ namespace AsagiVuforiaScripts
             {
                 if (topLeft.Tracked)
                     MarkerDetected(PosOfMarker.topLeft, topLeft.ImageTarget.transform.position);
+                else
+                    MarkerUnDetected(PosOfMarker.topLeft);
                 if (topRight.Tracked)
                     MarkerDetected(PosOfMarker.topRight, topRight.ImageTarget.transform.position);
+                else
+                    MarkerUnDetected(PosOfMarker.topRight);
                 if (bottomLeft.Tracked)
                     MarkerDetected(PosOfMarker.bottomLeft, bottomLeft.ImageTarget.transform.position);
+                else
+                    MarkerUnDetected(PosOfMarker.bottomLeft);
                 if (bottomRight.Tracked)
                     MarkerDetected(PosOfMarker.bottomRight, bottomRight.ImageTarget.transform.position);
+                else
+                    MarkerUnDetected(PosOfMarker.bottomRight);
             }
 
         }
 
         void MarkerDetected(PosOfMarker _posOfMarker, Vector3 _position)
         {
-            if (dontUpdate)
-                return;
-
             points[_posOfMarker] = _position;
             UpdateCenter();
             UpdateRotation();
+        }
+
+        void MarkerUnDetected(PosOfMarker _posOfMarker)
+        {
+            points.Remove(_posOfMarker);
         }
 
         void MarkerDetectedTopLeft(object sender, EventArgs args)
