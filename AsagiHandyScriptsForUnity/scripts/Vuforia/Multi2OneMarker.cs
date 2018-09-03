@@ -185,6 +185,7 @@ namespace AsagiVuforiaScripts
             if (forward.HasValue && upward.HasValue)
             {
                 rotation = Quaternion.LookRotation(forward.Value, upward.Value);
+                markerDetected = true;
             }
             else
             {
