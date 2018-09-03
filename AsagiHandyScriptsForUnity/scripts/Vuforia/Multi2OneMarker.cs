@@ -38,6 +38,43 @@ namespace AsagiVuforiaScripts
         public Dictionary<PosOfMarker, Vector3> points { get; private set; }
         public Vector3 center { get; private set; }
         public Quaternion rotation { get; private set; }
+        public Vector3? forward
+        {
+            get
+            {
+                Vector3? _forward = null;
+                if (points.ContainsKey(PosOfMarker.topLeft) && points.ContainsKey(PosOfMarker.bottomLeft))
+                {
+                    _forward = points[PosOfMarker.topLeft] - points[PosOfMarker.bottomLeft];
+                }
+
+                if (points.ContainsKey(PosOfMarker.topRight) && points.ContainsKey(PosOfMarker.bottomRight))
+                {
+                    _forward = (_forward.HasValue) ? (_forward.Value + (points[PosOfMarker.topRight] - points[PosOfMarker.bottomRight])) / 2f : points[PosOfMarker.topRight] - points[PosOfMarker.bottomRight];
+                }
+
+                return _forward;
+            }
+        }
+
+        public Vector3? upward
+        {
+            get
+            {
+                Vector3? _upward = null;
+                if (points.ContainsKey(PosOfMarker.topLeft) && points.ContainsKey(PosOfMarker.bottomLeft))
+                {
+                    _upward = (topLeft.ImageTarget.transform.up + bottomLeft.ImageTarget.transform.up) / 2f;
+                }
+
+                if (points.ContainsKey(PosOfMarker.topRight) && points.ContainsKey(PosOfMarker.bottomRight))
+                {
+                    _upward = (_upward.HasValue) ? (_upward + (bottomLeft.ImageTarget.transform.up + bottomRight.ImageTarget.transform.up) / 2f) / 2f : (bottomLeft.ImageTarget.transform.up + bottomRight.ImageTarget.transform.up) / 2f;
+                }
+
+                return _upward;
+            }
+        }
 
         public bool markerDetected { get; private set; }
         public int detectedMarkerNum { get { return points.Count; } }
@@ -145,28 +182,13 @@ namespace AsagiVuforiaScripts
 
         void UpdateRotation()
         {
-            Vector3 forward = Vector3.zero;
-            Vector3 upward = Vector3.zero;
-            markerDetected = true;
-
-            if (points.ContainsKey(PosOfMarker.topLeft) && points.ContainsKey(PosOfMarker.bottomLeft))
+            if (forward.HasValue && upward.HasValue)
             {
-                forward = points[PosOfMarker.topLeft] - points[PosOfMarker.bottomLeft];
-                upward = (topLeft.ImageTarget.transform.up + bottomLeft.ImageTarget.transform.up) / 2f;
-            }
-            else if (points.ContainsKey(PosOfMarker.topRight) && points.ContainsKey(PosOfMarker.bottomRight))
-            {
-                forward = points[PosOfMarker.topRight] - points[PosOfMarker.bottomRight];
-                upward = (bottomLeft.ImageTarget.transform.up + bottomRight.ImageTarget.transform.up) / 2f;
+                rotation = Quaternion.LookRotation(forward.Value, upward.Value);
             }
             else
             {
                 markerDetected = false;
-            }
-
-            if (markerDetected)
-            {
-                rotation = Quaternion.LookRotation(forward, upward);
             }
         }
     }
