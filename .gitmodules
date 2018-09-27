@@ -1,0 +1,6 @@
+[submodule "AsagiHandyScriptsForUnity/scripts/AsagiHandyScriptVuforia"]
+	path = AsagiHandyScriptsForUnity/scripts/AsagiHandyScriptVuforia
+	url = git@github.com:M-T-Asagi/AsagiHandyScriptVuforia.git
+[submodule "AsagiHandyScriptsForUnity/scripts/AsagiHandyScriptSingle"]
+	path = AsagiHandyScriptsForUnity/scripts/AsagiHandyScriptSingle
+	url = git@github.com:M-T-Asagi/AsagiHandyScriptSingle.git
